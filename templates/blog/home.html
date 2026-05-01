@@ -1,0 +1,78 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Home — MyBlog{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-8">
+    <h2 class="mb-4 fw-bold">Latest Posts</h2>
+
+    {% for post in posts %}
+    <div class="card post-card mb-4 border-0 shadow-sm">
+      {% if post.image %}
+        <img src="{{ post.image.url }}" class="card-img-top" style="height:200px;object-fit:cover">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">
+          <a href="{% url 'post-detail' post.pk %}" class="text-decoration-none text-dark">
+            {{ post.title }}
+          </a>
+        </h5>
+        <p class="text-muted small author-badge">
+          <i class="bi bi-person me-1"></i>{{ post.author.username }}
+           · 
+          <i class="bi bi-calendar me-1"></i>{{ post.date_posted|date:"M d, Y" }}
+        </p>
+        <p class="card-text text-secondary">{{ post.content|truncatechars:180 }}</p>
+        <a href="{% url 'post-detail' post.pk %}" class="btn btn-primary btn-sm">
+          Read More <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+    {% empty %}
+      <div class="text-center py-5">
+        <i class="bi bi-journal-x display-4 text-muted"></i>
+        <p class="mt-3 text-muted">No posts yet.
+          <a href="{% url 'post-create' %}">Create the first one!</a>
+        </p>
+      </div>
+    {% endfor %}
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav>
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">« Prev</a>
+          </li>
+        {% endif %}
+        <li class="page-item active">
+          <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next »</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+
+  <!-- Sidebar -->
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h6 class="card-title fw-bold">About</h6>
+        <p class="text-muted small">A personal blog platform built with Django & Bootstrap 5.</p>
+        {% if not user.is_authenticated %}
+          <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm w-100">Join Now</a>
+        {% else %}
+          <a href="{% url 'post-create' %}" class="btn btn-primary btn-sm w-100">Write a Post</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

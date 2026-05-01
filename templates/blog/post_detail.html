@@ -1,0 +1,42 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <article class="card border-0 shadow-sm">
+      {% if object.image %}
+        <img src="{{ object.image.url }}" class="card-img-top" style="max-height:350px;object-fit:cover">
+      {% endif %}
+      <div class="card-body p-4">
+        <h1 class="h3 fw-bold">{{ object.title }}</h1>
+        <p class="text-muted small">
+          By {{ object.author.username }}
+          · {{ object.date_posted|date:"F d, Y" }}
+          {% if object.date_updated != object.date_posted %}
+            · Updated {{ object.date_updated|date:"M d, Y" }}
+          {% endif %}
+        </p>
+        <hr>
+        <p class="card-text lh-lg" style="white-space:pre-wrap">{{ object.content }}</p>
+
+        {% if user == object.author %}
+        <hr>
+        <div class="d-flex gap-2">
+          <a href="{% url 'post-update' object.pk %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-pencil me-1"></i>Edit
+          </a>
+          <a href="{% url 'post-delete' object.pk %}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-trash me-1"></i>Delete
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </article>
+    <a href="{% url 'blog-home' %}" class="btn btn-link mt-3">
+      <i class="bi bi-arrow-left"></i> Back to posts
+    </a>
+  </div>
+</div>
+{% endblock %}
