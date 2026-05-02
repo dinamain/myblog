@@ -47,7 +47,6 @@ WSGI_APPLICATION = 'myblog.wsgi.application'
 
 import dj_database_url
 
-# Use DATABASE_URL if set (Railway PostgreSQL), else SQLite locally
 DATABASE_URL = config('DATABASE_URL', default=None)
 
 if DATABASE_URL:
