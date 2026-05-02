@@ -20,7 +20,7 @@ class Post(models.Model):
     )
 
     class Meta:
-        ordering = ['-date_posted']
+        ordering = ['-date_posted']  # newest post first
 
     def __str__(self):
         return self.title
